@@ -4,8 +4,7 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.ArrayList;
 
-public class EcommerceApp5 {
-
+public class EcommerceApp4 {
     private ArrayList<Product> cart = new ArrayList<>();
     private JTextArea cartDetails;
     private JLabel totalLabel;
@@ -14,7 +13,7 @@ public class EcommerceApp5 {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             if (authenticateUser()) {
-                new EcommerceApp5().createAndShowGUI();
+                new EcommerceApp4().createAndShowGUI();
             } else {
                 JOptionPane.showMessageDialog(null, "Authentication failed. Exiting application.");
                 System.exit(0);
@@ -46,7 +45,7 @@ public class EcommerceApp5 {
     private void createAndShowGUI() {
         JFrame frame = new JFrame("E-Commerce Shopping Cart");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1500, 800);  // Increased frame size
+        frame.setSize(1500, 800);
         frame.setLayout(new BorderLayout());
 
         // Navbar
@@ -75,7 +74,7 @@ public class EcommerceApp5 {
 
         // Main Product Display
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(0, 3, 10, 10)); // Reduced spacing
+        mainPanel.setLayout(new GridLayout(0, 3, 10, 5));
         mainPanel.setBackground(Color.BLACK);
 
         JScrollPane productScrollPane = new JScrollPane(mainPanel);
@@ -144,27 +143,26 @@ public class EcommerceApp5 {
         mainPanel.removeAll();
 
         if (category.equals("Electronics")) {
-            mainPanel.add(createProductPanel(new Product("Laptop", 60000)));
-            mainPanel.add(createProductPanel(new Product("Smartphone", 25000)));
-            mainPanel.add(createProductPanel(new Product("Headphones", 2000)));
-            mainPanel.add(createProductPanel(new Product("Smartwatch", 5000)));
-            mainPanel.add(createProductPanel(new Product("Tablet", 15000)));
-            mainPanel.add(createProductPanel(new Product("Camera", 30000)));
-            
+            mainPanel.add(createProductPanel(new Product("Laptop", 60000, "src\\Images\\laptop.png")));
+            mainPanel.add(createProductPanel(new Product("Smartphone", 25000, "src\\Images\phone.png")));
+            mainPanel.add(createProductPanel(new Product("Headphones", 2000, "src\\Images\\headphone.png")));
+            mainPanel.add(createProductPanel(new Product("Smartwatch", 2000, "src\\Images\\watch.png")));
+            mainPanel.add(createProductPanel(new Product("Tablet", 2000, "src\\Images\\tablet.png")));
+            mainPanel.add(createProductPanel(new Product("Camera", 2000, "src\\Images\\camera.png")));
         } else if (category.equals("Books")) {
-            mainPanel.add(createProductPanel(new Product("Java Programming", 500)));
-            mainPanel.add(createProductPanel(new Product("Design Patterns", 800)));
-            mainPanel.add(createProductPanel(new Product("Data Structures", 600)));
-            mainPanel.add(createProductPanel(new Product("Machine Learning", 1200)));
-            mainPanel.add(createProductPanel(new Product("AI for Beginners", 1000)));
-            mainPanel.add(createProductPanel(new Product("Python for All", 900)));
+            mainPanel.add(createProductPanel(new Product("Her Brothers", 500, "src\\Images\\book1.png")));
+            mainPanel.add(createProductPanel(new Product("The Heist", 800, "src\\Images\\book 2.png")));
+            mainPanel.add(createProductPanel(new Product("The Jazz Singer", 2000, "src\\Images\\book 3.png")));
+            mainPanel.add(createProductPanel(new Product("Riptides", 2000, "src\\Images\\book 4.png")));
+            mainPanel.add(createProductPanel(new Product("Her Brothers", 500, "src\\Images\\book1.png")));
+            mainPanel.add(createProductPanel(new Product("The Heist", 800, "src\\Images\\book 2.png")));
         } else if (category.equals("Clothing")) {
-            mainPanel.add(createProductPanel(new Product("T-Shirt", 500)));
-            mainPanel.add(createProductPanel(new Product("Jeans", 1200)));
-            mainPanel.add(createProductPanel(new Product("Jacket", 3000)));
-            mainPanel.add(createProductPanel(new Product("Sweater", 1500)));
-            mainPanel.add(createProductPanel(new Product("Shirt", 800)));
-            mainPanel.add(createProductPanel(new Product("Skirt", 1000)));
+            mainPanel.add(createProductPanel(new Product("T-Shirt", 500, "src\\Images\\clothing1.png")));
+            mainPanel.add(createProductPanel(new Product("T-shirt", 3000, "src\\Images\\clothing 2.png")));
+            mainPanel.add(createProductPanel(new Product("T-Shirt", 500, "src\\Images\\clothing 3.png")));
+            mainPanel.add(createProductPanel(new Product("T-shirt", 3000, "src\\Images\\clothing 2.png")));
+            mainPanel.add(createProductPanel(new Product("T-Shirt", 500, "src\\Images\\clothing1.png")));
+            mainPanel.add(createProductPanel(new Product("T-shirt", 3000, "src\\Images\\clothing 3.png")));
         }
 
         mainPanel.revalidate();
@@ -172,9 +170,22 @@ public class EcommerceApp5 {
     }
 
     private JPanel createProductPanel(Product product) {
-        JPanel productPanel = new JPanel(new BorderLayout(3, 1)); // Reduced spacing
+        JPanel productPanel = new JPanel(new BorderLayout(3, 1));
         productPanel.setBackground(Color.BLUE);
-        productPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 0));
+        productPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+
+        // Load Product Image
+        JLabel productImage = new JLabel();
+        try {
+            ImageIcon icon = new ImageIcon(product.getImagePath());
+            Image img = icon.getImage();
+            productImage.setIcon(new ImageIcon(img));
+            productImage.setHorizontalAlignment(SwingConstants.CENTER);
+        } catch (Exception e) {
+            productImage.setText("No Image");
+            productImage.setHorizontalAlignment(SwingConstants.CENTER);
+            productImage.setForeground(Color.WHITE);
+        }
 
         // Product Info
         JPanel infoPanel = new JPanel(new GridLayout(0, 1));
@@ -196,6 +207,7 @@ public class EcommerceApp5 {
         infoPanel.add(productPrice);
         infoPanel.add(addToCartBtn);
 
+        productPanel.add(productImage, BorderLayout.NORTH);
         productPanel.add(infoPanel, BorderLayout.CENTER);
 
         return productPanel;
@@ -213,14 +225,6 @@ public class EcommerceApp5 {
         updateCartDetails();
     }
 
-    private void checkout() {
-        if (cart.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Your cart is empty!", "Checkout", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Checkout successful! Total: RS" + total, "Checkout", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
     private void saveCartToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("cart.txt"))) {
             for (Product product : cart) {
@@ -233,22 +237,65 @@ public class EcommerceApp5 {
         }
     }
 
-    private void updateCartDetails() {
-        StringBuilder details = new StringBuilder();
-        for (Product product : cart) {
-            details.append(product.getName()).append(" - Rs").append(product.getPrice()).append("\n");
+    private void checkout() {
+        if (cart.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Your cart is empty!", "Checkout", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            showPaymentDialog();
         }
-        cartDetails.setText(details.toString());
+    }
+
+    private void showPaymentDialog() {
+        JPanel paymentPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JTextField cardNumberField = new JTextField();
+        JTextField nameField = new JTextField();
+        JTextField expiryField = new JTextField();
+        JTextField cvvField = new JTextField();
+
+        paymentPanel.add(new JLabel("Card Number:"));
+        paymentPanel.add(cardNumberField);
+        paymentPanel.add(new JLabel("Name on Card:"));
+        paymentPanel.add(nameField);
+        paymentPanel.add(new JLabel("Expiry Date (MM/YY):"));
+        paymentPanel.add(expiryField);
+        paymentPanel.add(new JLabel("CVV:"));
+        paymentPanel.add(cvvField);
+
+        int result = JOptionPane.showConfirmDialog(null, paymentPanel, "Payment Details", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String cardNumber = cardNumberField.getText();
+            String name = nameField.getText();
+            String expiry = expiryField.getText();
+            String cvv = cvvField.getText();
+
+            if (cardNumber.isEmpty() || name.isEmpty() || expiry.isEmpty() || cvv.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please fill all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Payment successful! Thank you for your purchase.", "Payment", JOptionPane.INFORMATION_MESSAGE);
+                clearCart();
+            }
+        }
+    }
+
+    private void updateCartDetails() {
+        cartDetails.setText("");
+        for (Product product : cart) {
+            cartDetails.append(product.getName() + " - Rs" + product.getPrice() + "\n");
+        }
+        cartDetails.append("\nTotal: Rs" + total);
         totalLabel.setText("Total: Rs" + total);
     }
 
-    class Product {
+    static class Product {
         private final String name;
         private final double price;
+        private final String imagePath;
 
-        public Product(String name, double price) {
+        public Product(String name, double price, String imagePath) {
             this.name = name;
             this.price = price;
+            this.imagePath = imagePath;
         }
 
         public String getName() {
@@ -257,6 +304,10 @@ public class EcommerceApp5 {
 
         public double getPrice() {
             return price;
+        }
+
+        public String getImagePath() {
+            return imagePath;
         }
     }
 }
